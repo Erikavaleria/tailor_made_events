@@ -12,5 +12,3 @@ __pycache__/
 # Archivos del sistema
 .DS_Store
 
-# uploads 
-static/uploads/
