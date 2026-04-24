@@ -1,0 +1,48 @@
+<!--primero se carga la base de la pagina-->
+
+{% extends "base.html" %}
+<!--sobre escribe el titulo de la base.html-->
+{% block title %}Inicio de sesión{% endblock %}
+
+<!-- todo lo que esta en este bloque se le agrega a  la base -->
+
+{% block content %}
+<div class="login-page-wrapper">
+    <div class="main-login-container">
+
+        <div class="login-left">
+            <div class="logo-area">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" >
+            </div>
+        </div>
+
+        <div class="login-right">
+            
+               <h1>Sing in</h1>
+             
+            
+            <!--formulario-->
+            <form method="POST" class="login-form">
+                {{ form.hidden_tag() }}<!--inserta el token CSRF protege contra ataques-->
+
+                <div class="form-group">
+
+                    {{ form.email.label(class = "email") }}<!--etiqueta del campo email-->
+                    {{ form.email(class="input-field", placeholder="Correo") }}<!--renderiza el imput-->
+                </div>
+
+                <div class="form-group">
+                    {{ form.password.label(class = "pass") }}<!--etiqueta del campo contraseña -->
+                    {{ form.password(class="input-field", placeholder="Contraseña") }}<!--renderiza el imput-->
+                </div>
+                <a class="forgot-password">Olvidaste tu contraseña?</a>
+
+                <div class="actions">
+                    {{ form.submit(class="btn-login", value="INICIAR") }}<!--boton para mandar formulario -->
+                    <a href="{{ url_for('signup') }}" class="signup-link">No tienes una cuenta? Regístrate</a><!--boton para registrarse-->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

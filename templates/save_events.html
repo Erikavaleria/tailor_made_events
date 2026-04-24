@@ -1,0 +1,27 @@
+{% extends "welcome.html" %}
+{% block content %}
+
+        <main class="content-area" role="main">
+            <section class="events-list" aria-live="polite">
+                <h1 class="calendar-title">EVENTOS GUARDADOS</h1>
+                <div id="events-container">
+                    <!-- Lista de eventos guardados cargada dinámicamente -->
+                </div> 
+            </section>
+        </main>
+    </div>
+<!-- Modal para eliminar-->
+    <div class="modal" id="delete-saved-modal">
+        <div class="modal-content-delete">
+            <h3 class="icon-delete"> Eliminar evento guardado</h3>
+            <p id="delete-saved-msg">¿Estás seguro de que quieres eliminar este evento?</p>
+            <div class="btn-container-delete">
+                <button id="confirm-delete-saved-btn" class="btn-delete">Eliminar</button>
+                <button onclick="closeDeleteSavedModal()" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+
+<script src="{{ url_for('static', filename='js/list_events_saved.js') }}"></script>
+ {% endblock %}

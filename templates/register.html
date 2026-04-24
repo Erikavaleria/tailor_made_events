@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}{% if signup %}Registro{% else %}Datos personales{% endif %}{% endblock %}
+{% block content %}
+
+<div class="login-page-wrapper">
+    <div class="main-login-container">
+        <div class="login-left">
+            <div class="logo-area">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" >
+              
+            </div>
+        </div>
+
+        <div class="login-right">
+            <div class="user-icon">
+                <i class="fas fa-user-circle"></i> </div>
+                
+            <h1>{% if signup %}Registrate{% else %}Datos personales{% endif %}</h1> 
+            <!--formulario-->
+            <form method="POST" enctype="multipart/form-data"> 
+                {{ form.hidden_tag() }}
+                {% if signup %}
+                    <div class="form-group">
+                        <!--campo de email-->
+                        {{ form.email.label (class = "email")}}
+                        {{ form.email(class="input-field", size=32) }}
+                        {% for error in form.email.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                         <!--campo de contraseña-->
+                        {{ form.password.label (class = "pass")}}
+                        {{ form.password(class="input-field", size=32) }}
+                        {% for error in form.password.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                         <!--campo de confirmacion de contraseña-->
+                        {{ form.confirm_password.label (class = "pass")}}
+                        {{ form.confirm_password(class="input-field", size=32) }}<br>
+                        {% for error in form.confirm_password.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <p>{{ form.submit(class="btn-login") }}</p><!--boton para enviar formilario-->
+                    <br>
+                    <a href="{{ url_for('index') }}" class="btn-return">Regresar</a>
+                {% else %} 
+
+
+                <!--si no es registro  es formulario de datos personales-->
+                    <div class="form-group">
+                         <!--campo de nombre-->
+                        {{ form.full_name.label }}
+                        {{ form.full_name(class="input-field", size=50) }}<br>
+                        {% for error in form.full_name.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                         <!--campo de ubicacion-->
+                        {{ form.location.label(class = "ubication") }}
+                        {{ form.location(class="input-field",) }}
+                        {% for error in form.location.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                         <!--campo de telefono-->
+                        {{ form.phone.label (class = "phone") }}
+                        {{ form.phone(class="input-field", size=20) }}
+                        {% for error in form.phone.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                         <!--campo de edad-->
+                        {{ form.age.label }}
+                        {{ form.age(class="input-field", min=10, max=120) }}
+                        {% for error in form.age.errors %}
+                            <span class="error">{{ error }}</span><br>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                         <!--campo de foto de perfil-->
+                        {{ form.profile_image(id="profile_image", style="display: none;") }}
+
+                        <!-- Botón personalizado -->
+                         <br>
+                        <label for="profile_image" class="btn-photo-custom">
+                            <img src="{{ url_for('static', filename='img/iconoUpload.png') }}" class="icon-camera">
+                            Subir foto de perfil
+                        </label>
+
+
+
+                        {% for error in form.profile_image.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <p>{{ form.submit(class="btn-login") }}</p><!--boton para enviar formilario-->
+
+                {% endif %}
+                
+                 
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!--base para login y registro-->
+<!DOCTYPE html>
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Inicio{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='base_style.css') }}">
+</head>
+<body> 
+    <!--contenedor de alertas-->
+    <div class="alert-container">
+        <!-- obtitne los mensajes enviados desde flask-->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %} <!-- recorre cada mensaje -->
+              <div class="alert {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+       
+    </div>
+
+    <!--espacio para egregar contendo de otras paginas-->
+     {% block content %}{% endblock %}
+</body>
+</html>
+
+<!--script para mostrar las alertas-->
+<script>
+
+  setTimeout(function(){
+
+      let alerts = document.querySelectorAll(".alert");
+
+      alerts.forEach(function(alert){
+
+          alert.classList.add("hide");
+
+          setTimeout(()=>{
+              alert.remove();
+          },500);
+
+      });
+
+  },4000); // 4 segundos
+
+</script>

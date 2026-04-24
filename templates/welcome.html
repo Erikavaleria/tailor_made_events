@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tailor-made events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home_style.css') }}">
+    
+</head>
+<body>
+    
+  
+<!-- Barra lateral -->
+    <nav class="sidebar collapsed" aria-label="Menú principal">
+        <br><a href="/welcome" class="icon-home" onclick="showHome()">Calendario</a><!-- link a incio -->
+        <a href="/list_events_page" class="icon-list">Mis eventos</a><!-- link a listado de eventos --> 
+        <a href="/destacados_page" class="icon-star">Destacados</a><!-- link a eventos destacados-->
+        <a href="/saves_page" class="icon-saves" >Guardados</a><!-- link eventos guardados-->
+    </nav>
+<!-- Header superior -->
+    <div class="main-content">
+        
+        <header>
+            <div class="menu-icon" aria-label="Toggle menú" title="Desplegar/ocultar menú">&#9776;</div><!-- lboton de menu lateral-->
+            <div class="title-app" aria-label="Título principal">Tailor-made Events</div>
+            <img src="/static/img/iconoLupaWhite.png" alt="" class="search-icon">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Buscar evento..." aria-label="Buscar evento" />
+                <div id="search-results" class="search-results"></div>
+            </div>
+            <!-- notificaciones -->
+             <div class="notification-container" onclick="toggleNotifications()">
+                
+                <span id="notif-count" class="notif-badge">0</span>
+            </div>
+
+            <div id="notif-panel" class="notif-panel"></div>
+            <div class="header-icons">
+                
+                <a href="/profile"><img src="{{ profile_image }}"  class="user-photo" /></a>
+            </div>
+        </header>
+{% block content %}
+        <main class="content-area" role="main">
+            <div class="main-container">
+                <!-- Sección del calendario -->
+                <section class="calendar-section" aria-live="polite">
+                    <!--etiqueta de titulo de clendario-->
+                    <div class="calendar-title-row">
+                        <h1 id="calendar-title" class="calendar-title">MI CALENDARIO</h1>
+                        <div class="month-nav-bottom" aria-label="Navegar entre meses">
+                            <button class="month-button" id="prev-month" aria-label="Mes anterior" title="Mes anterior">&#8592; </button>
+                            <h4 class="btn-month" id="btn-month" aria-live="polite" aria-label="Mes actual"></h4>
+                            <button class="month-button" id="next-month" aria-label="Mes siguiente" title="Mes siguiente">&#8594;</button>
+                        </div>
+                        
+                    </div>
+                    
+                    <table class="calendar-table" id="calendar-table" role="grid" aria-labelledby="calendar-title" aria-readonly="true" aria-colcount="7" aria-rowcount="6">
+                        <!-- Calendario generado dinámicamente -->
+                    </table>
+                    <!-- boton para cambiar el mes  -->
+                    
+                </section>
+
+                <!-- Panel de recomendaciones -->
+                <aside class="recommendations-panel collapsed" id="recommendations-panel" aria-labelledby="rec-title">
+
+                    <h2 class="icon-IA" id="rec-title">Recomendaciones</h2>
+                    <div id="banner-container"></div>
+                </aside>
+                <button id="rec-toggle-btn" onclick="toggleRecommendations()">✨</button>
+            </div>
+        </main>
+    {% endblock %}
+    </div>
+
+    <!-- Modal para detalles/visualizar eventos -->
+    <div class="modal" id="event-modal">
+        <div class="modal-content-detail">
+            <h3>Eventos del <span id="modal-date"></span></h3>
+            <div id="event-list"></div>
+            <div class="btn-detail">
+                <button onclick="addEvent()" class="btn-add">Agregar Evento</button>
+                <button class="close-modal" onclick="closeModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar evento -->
+    <div class="modal" id="add-modal">
+        <div class="modal-content-add">
+            <h3>Agregar Evento</h3>
+            <form id="add-form">
+                <input type="text"  id="event-title" placeholder="Título" required><br>
+                <textarea id="event-desc" placeholder="Descripción"></textarea><br>
+                <input type="date" id="event-date" required><br>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="event-featured"> Destacar
+                    </label>
+                </div><br>
+                <button type="submit" class="btn-save">Guardar</button>
+                <button type="button" onclick="closeModal()" class="btn-cancel">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para editar evento -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content-add">
+            <h3>Editar Evento</h3>
+            <form id="edit-form">
+                <input type="text" id="edit-title" placeholder="Título" required><br>
+                <textarea id="edit-desc" placeholder="Descripción"></textarea><br>
+                <input type="date" id="edit-date" required><br>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="edit-featured"> Marcar como destacado
+                    </label>
+                </div><br>
+                <button type="submit" class="btn-save">Actualizar</button>
+                <button type="button" onclick="closeModal()" class="btn-cancel">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para detalles de evento recomendado -->
+    <div class="modal" id="rec-modal">
+        <div class="modal-content-rec">
+            <div class="rec-modal-header">
+                <div class="rec-modal-pretitle">EVENTO RECOMENDADO</div>
+                <div class="rec-modal-title-row">
+                    <h3 id="rec-modal-title"></h3>
+                    <button class="btn-save-rec" id="btn-save-rec" onclick="saveRecommendedEvent()" title="Guardar evento">
+                        <img src="/static/img/iconoSave.png" class="save-icon">
+                    </button>
+                </div>
+            </div>
+
+            <p id="rec-modal-desc"></p>
+            <p><strong>Fecha:</strong> <span id="rec-modal-date"></span></p>
+            <p><strong>Lugar:</strong> <span id="rec-modal-venue"></span></p>
+            <div class="btn-container-delete">
+                <a id="rec-modal-link" href="#" target="_blank" class="btn-tm">Ver en Ticketmaster</a>
+                <button class="close-modal" onclick="closeModal()">Cerrar</button>
+            </div>
+            
+        </div>
+    </div>
+
+  <!-- Modal para eliminar-->
+    <div class="modal" id="delete-confirm-modal">
+        <div class="modal-content-delete">
+            <h3 class="icon-delete"> Eliminar evento</h3>
+            <p>¿Estás seguro de que quieres eliminar este evento?</p>
+
+            <div class="btn-container-delete">
+                <button id="confirm-delete-btn" class="btn-delete">Eliminar</button>
+                <button onclick="closeModal()" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div> 
+
+    <!--JAVASCRIP-->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+</body>
+</html>
+

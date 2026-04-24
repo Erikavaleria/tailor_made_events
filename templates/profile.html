@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Inicio{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile_style.css') }}">
+</head>
+<body> 
+    <div class="btn-container">
+                <!--barra de nevegacion -->
+                {% if session.email %}<!--si el usuario inicio sesion  -->
+                <a href="{{ url_for('welcome') }}" class="icon-back"></a>
+            
+                    
+
+        <!--infromacion del usuario-->
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <h2>{{ user.full_name }}</h2>
+
+                    {% if user.profile_image %}
+                        <img src="{{ user.profile_image }}" class="profile-img">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img/iconoUsuario.png') }}" class="profile-img" >
+                    {% endif %}
+                </div>
+
+                <div class="profile-info">
+                    <div class="info-card">
+                        <img src="/static/img/iconoMail.png">
+                        <div>
+                            <span class="label">CORREO ELECTRÓNICO</span>
+                            <p>{{ user.email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <img src="/static/img/iconoUbication.png">
+                        <div>
+                            <span class="label">UBICACIÓN</span>
+                            <p>{{ user.location }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <img src="/static/img/iconoPhone.png">
+                        <div>
+                            <span class="label">TELÉFONO</span>
+                            <p>{{ user.phone }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-preferences">
+                    <h3>Preferencias</h3>
+                    <ul>
+                        <li><strong>Intereses:</strong> {{ user.preferences.interests | join(', ') }}</li>
+                        <li><strong>Género musical favorito:</strong> {{ user.preferences.favorite_genre | join(', ') }}</li>
+                    </ul>
+                    
+                    
+                </div> 
+                <button onclick="openEditModal()" class="edit-btn">Editar perfil</button>
+            </div>
+        </div>
+
+        <button class="btn-logout">
+        
+            <a href="{{ url_for('logout') }}">Log out</a>
+                        
+        </button>
+
+        {% endif %}
+    </div>
+    
+
+    <!--modal para editar info de usuario -->
+    <div id="editModal" class="modal">
+
+        <div class="modal-content">
+
+            <span class="close" onclick="closeEditModal()">&times;</span>
+
+            <h2>Editar perfil</h2>
+
+            <form method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data">
+
+                <label>Nombre</label>
+                <input  class="input-edit-name" type="text" name="full_name" value="{{ user.full_name }}"><br>
+
+                <label>Teléfono</label>
+                <input class="input-edit" type="text" name="phone" value="{{ user.phone }}"><br>
+    
+                <label>Ubicación</label>
+                <select name="location" class="input-edit">
+                    <option value="Mexico">México</option>
+                    <option value="USA">Estados Unidos</option>
+                    <option value="Canada">Canadá</option>
+                    <option value="Spain">España</option>
+                    <option value="Argentina">Argentina</option>
+                </select><br>
+
+                <label>Edad</label>
+                <input class="input-edit" type="number" name="age" value="{{ user.age }}"><br>
+
+                <h2>Actualiza tus nuevos gustos</h2>
+                <h3>Intereses</h3>
+
+                <div class="interes_box">
+                    <label><input type="checkbox" name="interests" value="music" {% if 'music' in user.preferences.interests %}checked{% endif %} > Música</label>
+                    <label><input type="checkbox" name="interests" value="concert" {% if 'concert' in user.preferences.interests %}checked{% endif %}> Conciertos</label>
+                    <label><input type="checkbox" name="interests" value="festival" {% if 'festival' in user.preferences.interests %}checked{% endif %}> Festivales</label>
+                    <label><input type="checkbox" name="interests" value="soccer" {% if 'soccer' in user.preferences.interests %}checked{% endif %}> Fútbol</label>
+                    <label><input type="checkbox" name="interests" value="theatre" {% if 'theatre' in user.preferences.interests %}checked{% endif %}> Teatro</label>
+                    <label><input type="checkbox" name="interests" value="comedy" {% if 'comedy' in user.preferences.interests %}checked{% endif %}> Comedia</label>
+                    <label><input type="checkbox" name="interests" value="musical" {% if 'musical' in user.preferences.interests %}checked{% endif %}> Musicales</label>
+                    <label><input type="checkbox" name="interests" value="family" {% if 'family' in user.preferences.interests %}checked{% endif %}> Eventos familiares</label>
+                    <label><input type="checkbox" name="interests" value="motorsports" {% if 'motorsport' in user.preferences.interests %}checked{% endif %}> Deportes de motor</label>
+                    <label><input type="checkbox" name="interests" value="basketball" {% if 'basketball' in user.preferences.interests %}checked{% endif %}>Baketball</label>
+                    <label><input type="checkbox" name="interests" value="culture" {% if 'culture' in user.preferences.interests %}checked{% endif %}>Eventos culturales</label>
+                    <label><input type="checkbox" name="interests" value="exhibition" {% if 'exhibition' in user.preferences.interests %}checked{% endif %}>Exposiciones</label>
+                </div>
+
+                <h3>Género musical</h3>
+                <div class="gener_box">
+                    <label><input type="checkbox" name="favorite_genre" value="rock" {% if 'rock' in user.preferences.favorite_genre %}checked{% endif %}> Rock</label>
+                    <label><input type="checkbox" name="favorite_genre" value="pop" {% if 'pop' in user.preferences.favorite_genre %}checked{% endif %}> Pop</label>
+                    <label><input type="checkbox" name="favorite_genre" value="latin" {% if 'latin' in user.preferences.favorite_genre %}checked{% endif %}> Latino</label>
+                    <label><input type="checkbox" name="favorite_genre" value="electronic" {% if 'electronic' in user.preferences.favorite_genre %}checked{% endif %}> Electrónica</label>
+                    <label><input type="checkbox" name="favorite_genre" value="classical" {% if 'classical' in user.preferences.favorite_genre %}checked{% endif %}> Clasica</label>
+                    <label><input type="checkbox" name="favorite_genre" value="jazz" {% if 'jazz' in user.preferences.favorite_genre %}checked{% endif %}> Jazz</label>
+                </div>
+                <label class="new-photo-btn">Foto de perfil
+                <input type="file" name="profile_image"  class="archiv">
+                </label>
+                <br><br>
+
+                <button type="submit" class="changes-btn">Guardar cambios</button>
+
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>
+
+<!--funcion para modal-->
+<script>
+
+    function openEditModal(){
+        document.getElementById("editModal").style.display="block";
+    }
+
+    function closeEditModal(){
+        document.getElementById("editModal").style.display="none";
+    }
+
+</script>
+

@@ -1,0 +1,48 @@
+<!--html de la lista de destacados usando como pase el html de la pagina principal-->
+{% extends "welcome.html" %}
+{% block content %}
+        <!--contenedor del listado-->
+        <main class="content-area" role="main">
+            <section class="events-list" aria-live="polite">
+                <h1 class="calendar-title">EVENTOS DESTACADOS</h1>
+                <div id="events-container">
+                    <!-- Lista de eventos destacados cargada dinámicamente -->
+                </div> 
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para editar evento  -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content-add">
+            <h3>Editar Evento</h3>
+            <form id="edit-form">
+                <input type="text" id="edit-title" placeholder="Título" required><br>
+                <textarea id="edit-desc" placeholder="Descripción"></textarea><br>
+                <input type="date" id="edit-date" required><br>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="edit-featured"> Destacar
+                    </label>
+                </div><br>
+                <button type="submit" class="btn-add">Actualizar</button>
+                <button type="button" onclick="closeModal()" class="btn-cancel">Cancelar</button>
+            </form>
+        </div>
+    </div>
+    
+        <!-- Modal para eliminar-->
+    <div class="modal" id="delete-confirm-modal">
+        <div class="modal-content-detail">
+            <h3>⚠ Eliminar evento</h3>
+            <p>¿Estás seguro de que quieres eliminar este evento?</p>
+
+            <div style="display:flex; gap:10px; justify-content:center; margin-top:15px;">
+                    <button id="confirm-delete-btn" class="btn-delete">Eliminar</button>
+                    <button onclick="closeModal()" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div> 
+
+<script src="{{ url_for('static', filename='js/list_events_featured.js') }}"></script>
+ {% endblock %}
